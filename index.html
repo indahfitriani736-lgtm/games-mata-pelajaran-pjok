@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kotak Misteri PJOK — Permainan Bola Kaki</title>
+<style>
+:root{--navy:#082b67;--blue:#0878e8;--green:#159447;--gold:#ffd83d;--white:#fff}
+*{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:#10234a;background:linear-gradient(180deg,#078be8 0%,#9be6ff 42%,#3fb94d 42%,#16833a 100%);min-height:100vh}
+header{padding:22px 16px 18px;text-align:center;color:white;background:linear-gradient(135deg,#082b67,#075ac2);border-bottom:5px solid #ffd83d}
+.eyebrow{font-weight:800;letter-spacing:2px;font-size:.9rem}.title{font-size:clamp(1.8rem,5vw,3.4rem);line-height:1.05;margin:8px 0;text-shadow:0 4px 0 #07356d}.subtitle{font-size:clamp(1rem,2.5vw,1.35rem);font-weight:800}
+main{width:min(1100px,96%);margin:18px auto 30px}.dashboard{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;background:#fff;padding:14px 18px;border-radius:18px;box-shadow:0 5px 0 #0a3971;margin-bottom:18px}.score{font-size:1.25rem;font-weight:900;color:#082b67}.score strong{font-size:1.8rem;color:#e6a800}.stats{font-weight:750}.actions{display:flex;gap:9px;flex-wrap:wrap}
+button{font:inherit;font-weight:850;cursor:pointer;border:0;border-radius:14px;padding:13px 18px;min-height:48px;touch-action:manipulation;transition:transform .15s,filter .15s}button:hover{filter:brightness(1.06)}button:active{transform:scale(.97)}button:focus-visible{outline:4px solid #ffdf43;outline-offset:3px}
+.btn-blue{background:#0878e8;color:#fff;box-shadow:0 4px 0 #064eaa}.btn-gold{background:#ffd83d;color:#132b59;box-shadow:0 4px 0 #c18b00}.btn-muted{background:#e7eef9;color:#082b67}
+.instructions{text-align:center;color:#fff;font-weight:900;font-size:1.08rem;text-shadow:0 2px 3px #075b2b;margin:15px 0}
+.grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}
+.box{position:relative;min-height:150px;border:4px solid rgba(255,255,255,.9);border-radius:22px;background:linear-gradient(145deg,var(--c1),var(--c2));color:white;box-shadow:0 7px 0 rgba(0,0,0,.22),inset 0 4px 0 rgba(255,255,255,.3);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;overflow:hidden}
+.box:before{content:"";position:absolute;top:0;left:0;right:0;height:19px;background:rgba(255,255,255,.32);border-bottom:4px solid rgba(0,0,0,.13)}
+.box .question{font-size:clamp(2.5rem,5vw,4rem);font-weight:1000;line-height:1.1;text-shadow:0 4px 0 rgba(0,0,0,.22)}.box .number{font-size:1.05rem;background:#082b67;border:2px solid white;border-radius:50%;width:38px;height:38px;display:grid;place-items:center}.box .ball{position:absolute;right:8px;bottom:7px;font-size:1.55rem}.box:disabled{cursor:default;filter:grayscale(.45);opacity:.8}.box.opened{background:linear-gradient(145deg,#475569,#1e293b);border-style:dashed}.box.opened .question{font-size:2.5rem}.box.opened .ball{display:none}.box.opened:after{content:"TERBUKA";font-size:.72rem;font-weight:1000;letter-spacing:1px}
+@keyframes reveal{0%{transform:rotateY(0) scale(1)}40%{transform:rotateY(90deg) scale(.85)}70%{transform:rotateY(-12deg) scale(1.06)}100%{transform:rotateY(0) scale(1)}}
+.box.reveal{animation:reveal .65s ease}
+footer{text-align:center;color:white;font-weight:850;padding:16px;text-shadow:0 2px 3px #075b2b}
+.modal{position:fixed;inset:0;background:rgba(2,17,47,.75);display:none;align-items:center;justify-content:center;padding:16px;z-index:10}.modal.show{display:flex}.dialog{width:min(650px,100%);max-height:92vh;overflow:auto;background:white;border-radius:24px;padding:24px;box-shadow:0 18px 60px #001438}.dialog h2{margin:0 0 8px;color:#082b67;font-size:1.65rem}.kind{display:inline-block;background:#e8f2ff;color:#0755b4;border-radius:99px;padding:6px 12px;font-size:.85rem;font-weight:900;margin-bottom:10px}.prompt{font-size:1.2rem;font-weight:800;line-height:1.45}.answers{display:grid;gap:10px;margin:16px 0}.answer{background:#edf4ff;color:#082b67;text-align:left;border:2px solid #c7dcff}.answer.correct{background:#d6fbe3;border-color:#1caa54}.answer.wrong{background:#ffe1e1;border-color:#e34c4c}.feedback{padding:12px;border-radius:12px;font-weight:800;margin:12px 0;background:#f1f5f9}.dialog-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.dialog-actions button{flex:1}.small{font-size:.9rem;color:#53627b}.end{text-align:center}.end .bigscore{font-size:3rem;color:#e4a800;font-weight:1000}
+@media(max-width:700px){.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.box{min-height:130px}.dashboard{align-items:flex-start}.score{width:100%}.title{font-size:2rem}.box .question{font-size:3rem}}
+@media(min-width:701px) and (max-width:900px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}.box{min-height:135px}}
+</style>
+</head>
+<body>
+<header>
+ <div class="eyebrow">🎓 PEMBELAJARAN INTERAKTIF • PJOK SMK</div>
+ <h1 class="title">⚽ KOTAK MISTERI</h1>
+ <div class="subtitle">MYSTERY BOX — PERMAINAN BOLA KAKI</div>
+</header>
+<main>
+ <section class="dashboard" aria-live="polite">
+  <div class="score">🏆 SKOR KAMU: <strong id="score">0</strong></div>
+  <div class="stats">Kotak dibuka: <span id="openedCount">0</span>/10 · Sisa: <span id="remaining">10</span></div>
+  <div class="actions"><button class="btn-muted" id="soundBtn" type="button">🔊 Suara: Aktif</button><button class="btn-gold" id="resetTop" type="button">↻ Main Lagi</button></div>
+ </section>
+ <p class="instructions">Pilih satu kotak misteri untuk membuka soal, tantangan, atau bonus!</p>
+ <section class="grid" id="grid" aria-label="Sepuluh kotak misteri"></section>
+ <footer>JUNJUNG TINGGI SPORTIVITAS!<br>⚽ Teknik · Kerja Sama · Disiplin · Prestasi</footer>
+</main>
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+ <div class="dialog" id="dialog"></div>
+</div>
+<script>
+(() => {
+const data = [
+ {type:'SOAL • 10 POIN',q:'Apa tujuan utama permainan sepak bola?',a:['Memasukkan bola ke gawang lawan','Melempar bola ke keranjang','Memukul bola melewati net','Membawa bola dengan tangan'],correct:0,explain:'Tujuan utama sepak bola adalah mencetak gol ke gawang lawan.'},
+ {type:'SOAL • 10 POIN',q:'Berapa jumlah pemain inti satu tim sepak bola di lapangan pada awal pertandingan?',a:['5 pemain','6 pemain','11 pemain','12 pemain'],correct:2,explain:'Satu tim sepak bola memainkan 11 pemain, termasuk penjaga gawang.'},
+ {type:'SOAL • 10 POIN',q:'Bagian kaki yang umum digunakan untuk operan pendek yang akurat adalah …',a:['Tumit','Kaki bagian dalam','Ujung jari kaki','Lutut'],correct:1,explain:'Kaki bagian dalam memberi bidang sentuh yang luas untuk operan pendek.'},
+ {type:'TANTANGAN • 15 POIN',q:'Lakukan 5 kali passing menggunakan kaki bagian dalam bersama teman. Usahakan operan akurat dan terkontrol.',challenge:true,explain:'Minta guru memeriksa teknik dan keselamatan sebelum poin diberikan.'},
+ {type:'BONUS KEJUTAN • +20 POIN',q:'🎉 BONUS SPORTIVITAS! Kamu mendapatkan 20 poin kejutan.',bonus:20,explain:'Sportivitas membuat permainan lebih menyenangkan dan adil.'},
+ {type:'SOAL • 10 POIN',q:'Apa nama teknik membawa bola sambil bergerak dalam sepak bola?',a:['Dribbling','Blocking','Smash','Servis'],correct:0,explain:'Dribbling adalah menggiring bola sambil bergerak.'},
+ {type:'TANTANGAN • 15 POIN',q:'Giring bola melewati 3 penanda secara terkontrol. Jaga bola tetap dekat dengan kaki.',challenge:true,explain:'Minta guru memeriksa kontrol bola dan keselamatan sebelum poin diberikan.'},
+ {type:'SOAL • 10 POIN',q:'Siapa yang boleh menggunakan tangan untuk memainkan bola di area penalti timnya, dengan batasan aturan?',a:['Semua pemain','Penyerang','Penjaga gawang','Kapten tim'],correct:2,explain:'Penjaga gawang memiliki hak khusus menggunakan tangan di area penalti sendiri, sesuai aturan.'},
+ {type:'SOAL • 10 POIN',q:'Rekan satu tim berada di posisi bebas dan lebih baik menerima bola. Apa tindakan yang tepat?',a:['Mengabaikannya','Mengoper bola kepadanya','Menendang bola keluar lapangan','Menghentikan pertandingan sendiri'],correct:1,explain:'Mengoper kepada rekan yang berada di posisi lebih baik mendukung kerja sama tim.'},
+ {type:'BONUS KEJUTAN • +25 POIN',q:'🌟 BONUS KERJA SAMA TIM! Tambahkan 25 poin dan terus dukung teman satu tim.',bonus:25,explain:'Kerja sama yang baik membawa tim menuju kemenangan!'}
+];
+const colors=[['#ff5555','#b51c2c'],['#24b9ff','#0753c7'],['#34d65b','#07843b'],['#c24cff','#6814b8'],['#ffad32','#d45a00'],['#22d9e7','#0783ad'],['#ff5bb2','#c21869'],['#ffe34f','#d58a00'],['#568aff','#173fba'],['#ff6262','#b51c2c']];
+let score=0, opened=new Set(), correctCount=0, sound=true, activeIndex=null, answered=false;
+const $=id=>document.getElementById(id);
+function beep(freq=650,duration=.12){if(!sound)return;try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;const c=new C(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=freq;o.type='sine';g.gain.value=.07;o.start();g.gain.exponentialRampToValueAtTime(.001,c.currentTime+duration);o.stop(c.currentTime+duration);o.onended=()=>c.close()}catch(e){}}
+function renderGrid(){$('grid').innerHTML='';data.forEach((d,i)=>{const b=document.createElement('button');b.type='button';b.className='box'+(opened.has(i)?' opened':'');b.style.setProperty('--c1',colors[i][0]);b.style.setProperty('--c2',colors[i][1]);b.disabled=opened.has(i);b.setAttribute('aria-label',`Kotak misteri ${i+1}${opened.has(i)?', sudah dibuka':''}`);b.innerHTML=`<span class="question">${opened.has(i)?'✓':'?'}</span><span class="number">${i+1}</span><span class="ball">⚽</span>`;b.addEventListener('click',()=>openBox(i,b));$('grid').appendChild(b)});updateStats()}
+function updateStats(){$('score').textContent=score;$('openedCount').textContent=opened.size;$('remaining').textContent=10-opened.size}
+function openBox(i,button){if(opened.has(i))return;activeIndex=i;answered=false;button.classList.add('reveal');beep(520,.18);setTimeout(()=>{opened.add(i);renderGrid();showQuestion(i)},280)}
+function showQuestion(i){const d=data[i];const dialog=$('dialog');let content=`<span class="kind">${d.type}</span><h2 id="modalTitle">Kotak Misteri ${i+1}</h2><p class="prompt">${d.q}</p>`;
+if(d.a){content+='<div class="answers">'+d.a.map((a,j)=>`<button class="answer" data-answer="${j}">${String.fromCharCode(65+j)}. ${a}</button>`).join('')+'</div><div class="feedback" id="feedback" style="display:none"></div>'}
+else if(d.challenge){content+='<p class="small">Tantangan praktik harus diperiksa guru. Lakukan di area aman dan lakukan pemanasan terlebih dahulu.</p><div class="feedback" id="feedback">Selesaikan tantangan, lalu minta konfirmasi guru.</div><button class="btn-blue" id="confirmChallenge">✓ Tantangan Berhasil (Konfirmasi Guru)</button>'}
+else {content+=`<div class="feedback">${d.explain}</div>`}
+content+='<div class="dialog-actions"><button class="btn-muted" id="backBtn">Kembali ke Kotak</button></div>';dialog.innerHTML=content;$('modal').classList.add('show');
+dialog.querySelectorAll('[data-answer]').forEach(btn=>btn.addEventListener('click',()=>chooseAnswer(i,Number(btn.dataset.answer),btn)));
+const challenge=$('confirmChallenge');if(challenge)challenge.addEventListener('click',()=>{if(answered)return;answered=true;score+=15;challenge.disabled=true;challenge.textContent='Poin tantangan sudah diberikan';$('feedback').textContent='Bagus! +15 poin diberikan setelah konfirmasi guru.';beep(880,.2);updateStats();appendContinue()});
+$('backBtn').addEventListener('click',closeModal);
+if(!d.a&&!d.challenge){score+=d.bonus||0;updateStats();beep(850,.2);appendContinue()}
+}
+function chooseAnswer(i,choice,btn){if(answered)return;answered=true;const d=data[i],ok=choice===d.correct;const buttons=$('dialog').querySelectorAll('[data-answer]');buttons.forEach(x=>{x.disabled=true;if(Number(x.dataset.answer)===d.correct)x.classList.add('correct')});if(!ok)btn.classList.add('wrong');else{score+=10;correctCount++;beep(900,.2)}if(!ok)beep(220,.22);const f=$('feedback');f.style.display='block';f.textContent=(ok?'Benar! +10 poin. ':'Belum tepat. ')+d.explain;updateStats();appendContinue()}
+function appendContinue(){if($('continueBtn'))return;const actions=$('dialog').querySelector('.dialog-actions');const b=document.createElement('button');b.id='continueBtn';b.className='btn-blue';b.textContent=opened.size===10?'Lihat Hasil Akhir':'Lanjutkan';b.addEventListener('click',()=>{closeModal();if(opened.size===10)showEnd()});actions.appendChild(b)}
+function closeModal(){$('modal').classList.remove('show');activeIndex=null;if(opened.size===10)setTimeout(showEnd,180)}
+function showEnd(){if(opened.size!==10)return;const msg=score>=90?'Luar biasa! Kamu menguasai materi dan menunjukkan semangat juang!':score>=50?'Bagus! Terus berlatih untuk meningkatkan kemampuan sepak bolamu.':'Tetap semangat! Pelajari kembali materi dan coba lagi.';$('dialog').innerHTML=`<div class="end"><span class="kind">PERMAINAN SELESAI</span><h2 id="modalTitle">🏆 Hasil Akhir</h2><div class="bigscore">${score}</div><p class="prompt">Poin kamu</p><p>Kotak dibuka: <b>${opened.size}/10</b><br>Jawaban benar: <b>${correctCount}</b></p><p>${msg}</p><p class="small">Ingat: sportivitas, disiplin, dan kerja sama sama pentingnya dengan kemenangan.</p><button class="btn-blue" id="playAgain">↻ MAIN LAGI</button></div>`;$('modal').classList.add('show');$('playAgain').addEventListener('click',reset)}
+function reset(){score=0;opened=new Set();correctCount=0;answered=false;activeIndex=null;$('modal').classList.remove('show');renderGrid();beep(600,.1)}
+$('resetTop').addEventListener('click',reset);$('soundBtn').addEventListener('click',()=>{sound=!sound;$('soundBtn').textContent=sound?'🔊 Suara: Aktif':'🔇 Suara: Mati';if(sound)beep()});$('modal').addEventListener('click',e=>{if(e.target===$('modal'))closeModal()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});renderGrid();
+})();
+</script>
+</body>
+</html>
